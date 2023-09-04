@@ -146,7 +146,7 @@ const Home = () => {
         {/* Blob */}
         <Box
           component={"img"}
-          src="../../src/assets/blob.svg"
+          src="/blob.svg"
           alt="blob"
           sx={{
             position: "fixed",
@@ -157,7 +157,7 @@ const Home = () => {
 
         <Box
           component={motion.img}
-          src="../../src/assets/homeBg.png"
+          src="/homeBg.png"
           alt="camera"
           whileHover={{
             x: 50,
