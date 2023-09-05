@@ -14,7 +14,7 @@ const Context = ({ children }) => {
 
   //to keep track of current user
   const [currentuser, setCurrentuser] = useState("");
-
+  const [isLoading, setIsLoading] = useState(true);
   const [isFirstrender, setIsFirstrender] = useState(true);
 
   const [filteredProducts, setfilteredProducts] = useState([]);
@@ -25,6 +25,7 @@ const Context = ({ children }) => {
         const options = { withCredentials: true, headers: authHeader() };
         const { data } = await axiosInstance.get("/products", options);
         setfilteredProducts(data);
+        setIsLoading(false);
         dispatch({
           type: "FETCH_FROM_DB",
           payload: data,
@@ -62,6 +63,7 @@ const Context = ({ children }) => {
     setfilteredProducts,
     currentuser,
     setCurrentuser,
+    isLoading,
   };
 
   return <cartContext.Provider value={value}>{children}</cartContext.Provider>;
