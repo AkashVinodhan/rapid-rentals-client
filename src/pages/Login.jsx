@@ -31,7 +31,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setCurrentuser(res.data.user.name);
         setuser(initialState);
-        nav("/");
+        nav("/products");
       }
     } catch (error) {
       if (error.response.data.message) {

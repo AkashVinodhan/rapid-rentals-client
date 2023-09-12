@@ -3,8 +3,9 @@ import {
   Button,
   IconButton,
   Stack,
-  TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useContext } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -17,6 +18,9 @@ import axiosInstance, { authHeader } from "../axios";
 const Navbar = ({ productPage }) => {
   const nav = useNavigate();
   const { state, currentuser } = useContext(cartContext);
+
+  const theme = useTheme();
+  const isExtraSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleLogout = async () => {
     try {
@@ -67,6 +71,7 @@ const Navbar = ({ productPage }) => {
         </Box>
         {localStorage.getItem("user") && (
           <Typography
+            display={{ xs: "none", md: "block" }}
             color={"white"}
             width={"150px"}
             ml={2}
@@ -74,7 +79,7 @@ const Navbar = ({ productPage }) => {
           >{`Hi, ${JSON.parse(localStorage.getItem("user")).name}`}</Typography>
         )}
       </Stack>
-      <Box>
+      <Stack direction={"row"}>
         <Button
           variant="contained"
           color="accent"
@@ -84,9 +89,15 @@ const Navbar = ({ productPage }) => {
           }}
         >
           {productPage ? (
-            <>
-              Cart<span>{`(${state.cart.length})`}</span>
-            </>
+            isExtraSmallSize ? (
+              <>
+                <span>{`(${state.cart.length})`}</span>
+              </>
+            ) : (
+              <>
+                Cart<span>{`(${state.cart.length})`}</span>
+              </>
+            )
           ) : (
             <span>Products</span>
           )}
@@ -96,7 +107,7 @@ const Navbar = ({ productPage }) => {
             <LogoutIcon />
           </IconButton>
         )}
-      </Box>
+      </Stack>
     </Stack>
   );
 };
