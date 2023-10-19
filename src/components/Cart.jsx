@@ -3,6 +3,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  CircularProgress,
   IconButton,
   Stack,
   Typography,
@@ -17,12 +18,18 @@ import { motion } from "framer-motion";
 import LoginModal from "./LoginModal";
 import axiosInstance from "../axios";
 
+//loading animations
+import ThreeDotsWave from "./ThreeDotsWave";
+
 const Cart = () => {
   const { state, dispatch } = useContext(cartContext);
   const [total, setTotal] = useState();
 
   //modal
   const [open, setOpen] = useState(false);
+
+  //loading pay button
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     //update total
@@ -32,9 +39,11 @@ const Cart = () => {
   }, [state.cart]);
 
   const handleCheckout = async () => {
+    setLoading(true);
     if (localStorage.getItem("user")) {
       try {
         const response = await axiosInstance.post("/checkout", state.cart);
+        setLoading(false);
         const payment_url = response.data.url;
         if (payment_url) {
           window.open(payment_url);
@@ -181,14 +190,19 @@ const Cart = () => {
             >
               <Box fontWeight={"bold"}>Total : ₹ {total}</Box>
               <Box>
-                <Button
-                  variant="outlined"
-                  color="accent"
-                  startIcon={<CurrencyRupeeIcon />}
-                  onClick={handleCheckout}
-                >
-                  Pay
-                </Button>
+                {loading ? (
+                  // <CircularProgress color="inherit" size={20} />
+                  <ThreeDotsWave />
+                ) : (
+                  <Button
+                    variant="outlined"
+                    color="accent"
+                    startIcon={<CurrencyRupeeIcon />}
+                    onClick={handleCheckout}
+                  >
+                    Pay
+                  </Button>
+                )}
               </Box>
             </Stack>
           )}

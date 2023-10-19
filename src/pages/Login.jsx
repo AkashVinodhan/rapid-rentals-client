@@ -1,4 +1,11 @@
-import { Box, Button, Card, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +20,8 @@ const Login = () => {
     password: "Password",
   };
   const [user, setuser] = useState(initialState);
+
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [inputsFilled, setinputsFilled] = useState(false);
 
   useEffect(() => areInputsFilled(), [user]);
@@ -24,10 +33,12 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
+    setIsLoggingIn(true);
     try {
       const options = { withCredentials: true, credentials: "include" };
       const res = await axiosInstance.post("/login", user, options);
       if (res.status == 200) {
+        setIsLoggingIn(false);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setCurrentuser(res.data.user.name);
         setuser(initialState);
@@ -100,15 +111,20 @@ const Login = () => {
           }}
           sx={{ width: { xs: "90%", md: "50%" } }}
         />
-        <Button
-          variant="contained"
-          disabled={!inputsFilled}
-          endIcon={<LoginIcon />}
-          onClick={handleLogin}
-          sx={{ width: "25%" }}
-        >
-          Login
-        </Button>
+        {!isLoggingIn ? (
+          <Button
+            variant="contained"
+            disabled={!inputsFilled}
+            endIcon={<LoginIcon />}
+            onClick={handleLogin}
+            sx={{ width: "25%" }}
+          >
+            Login
+          </Button>
+        ) : (
+          <CircularProgress color="inherit" size={20} />
+        )}
+
         <Typography variant="subtitle2">
           Don't have an account yet? <Link to={"/signup"}>Signup</Link>
         </Typography>
