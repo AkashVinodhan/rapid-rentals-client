@@ -39,8 +39,8 @@ const Cart = () => {
   }, [state.cart]);
 
   const handleCheckout = async () => {
-    setLoading(true);
     if (localStorage.getItem("user")) {
+      setLoading(true);
       try {
         const response = await axiosInstance.post("/checkout", state.cart);
         setLoading(false);
